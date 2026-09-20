@@ -16,6 +16,10 @@ This project is a C++ implementation of [Bees and Bombs](https://bsky.app/profil
 
 - EXTRA: Allow the user to click and drag to rotate the camera + have a camera reset button
 
+## Download and install
+
+TODO: Add instructions on how to download and install the application for AT LEAST Windows
+
 ## Project reflection
 
 TODO: Project reflection when project is finished (delete this line and jump straight into General Thoughts)
