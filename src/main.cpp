@@ -6,7 +6,7 @@
 const unsigned int FPS = 60;
 const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
 
-// Helper function to get the current time in seconds
+// Helper to get the current time in seconds
 double getTimeInSeconds()
 {
     auto now = std::chrono::steady_clock::now();
@@ -14,7 +14,7 @@ double getTimeInSeconds()
     return std::chrono::duration<double>(duration).count();
 }
 
-// Helper function to convert degrees to radians
+// Helper that converts degrees to radians
 double degreesToRadians(double degrees)
 {
     return degrees * (M_PI / 180.0);
@@ -28,21 +28,21 @@ void updateValueDegrees(double &oscillatingValueDegrees, const double deltaTime,
     // Wrap around 360 degrees (no precsision loss)
     if (oscillatingValueDegrees >= 360.0)
     {
-        oscillatingValueDegrees = 0.0; // Reset the given angle
+        oscillatingValueDegrees = 0.0; // Reset the given angle (mutates)
     }
 }
 
 // Helper that calculates what height a cube should be
-double calculateCubeHeight(double oscillatingValueDegrees)
+double calculateCubeHeight(const double oscillatingValueDegrees)
 {
     const double SCALAR = 20;
     const double MIN_HEIGHT = 2.0;
     /*
-        sin(radianAngle)    --> -1.0...1.0
-        + 1                 --> 0.0...2.0
-        / 2                 --> 0.0...1.0 --> NORMALIZED
-        * SCALAR            --> 0.0...SCALAR
-        + MIN_HEIGHT        --> MIN_HEIGHT...SCALAR + MIN_HEIGHT
+        sin(radianAngle)    --> -1.0...1.0      --> SINE'S RANGE
+        + 1                 --> 0.0...2.0       --> ZERO OUT LOWER BOUND
+        / 2                 --> 0.0...1.0       --> NORMALIZE
+        * SCALAR            --> 0.0...SCALAR    --> SCALE
+        + MIN        --> MIN...SCALAR + MIN     --> SHIFT BY MIN
     */
     return (((std::sin(degreesToRadians(oscillatingValueDegrees)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
@@ -60,24 +60,27 @@ int main()
     camera.fovy = 50.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
-    double oscillatingValueDegrees = 0.0; // Initial angle
+    double oscillatingValueDegrees = 0.0; // Initial value
     double lastTime = getTimeInSeconds(); // Initial time
 
     // Main game loop
     while (!WindowShouldClose())
     {
         // Moving the cube up and down
-        double currentTime = getTimeInSeconds();   // Get current time
-        double deltaTime = currentTime - lastTime; // Calculate Delta Time (seconds passed since the last frame)
+        double currentTime = getTimeInSeconds();   // Get/Update current time
+        double deltaTime = currentTime - lastTime; // Calculate Delta Time (seconds passed since the previous frame)
         lastTime = currentTime;                    // Update previous time
 
-        // Increase angle based on time passed, not frame rate
+        // Increase value based on time passed, not frame rate
         updateValueDegrees(oscillatingValueDegrees, deltaTime);
 
         // Get cube height
         double cubeHeight = calculateCubeHeight(oscillatingValueDegrees);
 
-        // Drawing
+        // -------------
+        // -- Drawing --
+        // -------------
+
         BeginDrawing();         // Create canvas to draw on
         ClearBackground(BLACK); // Clear canvas before anything else
 
@@ -97,6 +100,7 @@ int main()
 
         EndDrawing(); // End drawing
     }
+
     CloseWindow(); // Must close window
 
     return 0;
