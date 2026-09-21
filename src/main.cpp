@@ -49,7 +49,9 @@ double calculateCubeHeight(const double pos, const double oscillatingValueDegree
         / 2                 --> 0.0...1.0       --> NORMALIZE
         * SCALAR            --> 0.0...SCALAR    --> SCALE
         + MIN        --> MIN...SCALAR + MIN     --> SHIFT BY MIN
-        */
+
+        sin(radianAngle + position) --> pos offsets result (for wave effect)
+    */
     return (((std::sin(degreesToRadians(oscillatingValueDegrees + pos)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
 
