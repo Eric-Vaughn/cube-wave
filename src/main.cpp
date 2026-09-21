@@ -1,9 +1,13 @@
 #include <string>
+#include <vector>
 #include <cmath>
 #include <chrono>
 #include <raylib.h>
 
 const unsigned int FPS = 60;
+const unsigned int NUM_ROWS = 9;                 // Odd for center
+const unsigned int NUM_COLS = NUM_ROWS;          // Cube
+const unsigned int CUBE_POS_OFFSET = 5;          // Testing buffer b/w cubes
 const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
 
 // Helper to get the current time in seconds
@@ -57,11 +61,26 @@ int main()
     camera.position = (Vector3){10.0f, 10.0f, 10.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
-    camera.fovy = 50.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.fovy = 30.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
     double oscillatingValueDegrees = 0.0; // Initial value
     double lastTime = getTimeInSeconds(); // Initial time
+
+    // Vector3 testRaylibVec3 = {0.0, 0.0, 0.0};
+
+    std::vector<Vector3> cubePosArray = {};
+
+    for (int i = 0; i < NUM_ROWS; i++)
+    {
+        double xOffset = i * CUBE_POS_OFFSET;
+
+        for (int j = 0; j < NUM_COLS; j++)
+        {
+            double yOffset = j * CUBE_POS_OFFSET;
+            cubePosArray.push_back((Vector3){(float)i + CUBE_POS_OFFSET, 0, (float)j + CUBE_POS_OFFSET});
+        }
+    }
 
     // Main game loop
     while (!WindowShouldClose())
@@ -87,9 +106,15 @@ int main()
         BeginMode3D(camera); // Begin 3D mode
 
         // Draw a solid cube (Position, Width, Height, Length, Color)
-        DrawCube((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, RED);
+        // DrawCube((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, RED);
         // Draw the cube's wireframe outline on top
-        DrawCubeWires((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, MAROON);
+        // DrawCubeWires((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, MAROON);
+
+        for (Vector3 cubePos : cubePosArray)
+        {
+            DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
+            DrawCubeWires(cubePos, 2.0, cubeHeight, 2.0, MAROON);
+        }
 
         // Draw a reference grid on the ground
         // DrawGrid(10, 1.0f);
