@@ -19,6 +19,21 @@ double degreesToRadians(double degrees)
     return degrees * (M_PI / 180.0);
 }
 
+// Helper that calculates what height a cube should be
+double calculateCubeHeight(double angleDegrees)
+{
+    const double SCALAR = 20;
+    const double MIN_HEIGHT = 2.0;
+    /*
+        sin(radianAngle)    --> -1.0...1.0
+        + 1                 --> 0.0...2.0
+        / 2                 --> 0.0...1.0 --> NORMALIZED
+        * SCALAR            --> 0.0...SCALAR
+        + MIN_HEIGHT        --> MIN_HEIGHT...SCALAR + MIN_HEIGHT
+    */
+    return (((std::sin(degreesToRadians(angleDegrees)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+}
+
 int main()
 {
     InitWindow(800, 800, "Cube Wave"); // Create window
@@ -55,9 +70,7 @@ int main()
             angleDegrees = 0.0;
         }
 
-        // Convert to Radians & Calculate Sine Wave
-        double angleRadians = angleDegrees * (M_PI / 180.0);
-        double cubeHeight = ((std::sin(angleRadians) + 1) / 2) + 2.0;
+        double cubeHeight = calculateCubeHeight(angleDegrees);
 
         // Drawing
         BeginDrawing();         // Create canvas to draw on
