@@ -7,7 +7,7 @@
 const unsigned int FPS = 60;
 const unsigned int NUM_ROWS = 9;                 // Odd for center
 const unsigned int NUM_COLS = NUM_ROWS;          // Cube
-const unsigned int CUBE_POS_OFFSET = 5;          // Testing buffer b/w cubes
+const unsigned int CUBE_POS_OFFSET = 2;          // Testing buffer b/w cubes
 const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
 
 // Helper to get the current time in seconds
@@ -58,10 +58,10 @@ int main()
 
     // Create a 3D camera
     Camera3D camera = {0};
-    camera.position = (Vector3){10.0f, 10.0f, 10.0f}; // Camera position
+    camera.position = (Vector3){30.0f, 30.0f, 30.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
-    camera.fovy = 30.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.fovy = 100.0f;                             // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
     double oscillatingValueDegrees = 0.0; // Initial value
@@ -78,7 +78,7 @@ int main()
         for (int j = 0; j < NUM_COLS; j++)
         {
             double yOffset = j * CUBE_POS_OFFSET;
-            cubePosArray.push_back((Vector3){(float)i + CUBE_POS_OFFSET, 0, (float)j + CUBE_POS_OFFSET});
+            cubePosArray.push_back((Vector3){(float)i + (float)xOffset, 0, (float)j + (float)yOffset});
         }
     }
 
