@@ -49,8 +49,27 @@ double calculateCubeHeight(const double pos, const double oscillatingValueDegree
         / 2                 --> 0.0...1.0       --> NORMALIZE
         * SCALAR            --> 0.0...SCALAR    --> SCALE
         + MIN        --> MIN...SCALAR + MIN     --> SHIFT BY MIN
-    */
+        */
     return (((std::sin(degreesToRadians(oscillatingValueDegrees + pos)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+}
+
+// Helper to generate a vector of cube position
+std::vector<Vector3> genVecOfCubePositions()
+{
+    std::vector<Vector3> cubePosArray = {};
+
+    for (int i = 0; i < NUM_ROWS; i++)
+    {
+        double xOffset = i * CUBE_POS_OFFSET;
+
+        for (int j = 0; j < NUM_COLS; j++)
+        {
+            double yOffset = j * CUBE_POS_OFFSET;
+            cubePosArray.push_back((Vector3){(float)i + (float)xOffset, 0, (float)j + (float)yOffset});
+        }
+    }
+
+    return cubePosArray;
 }
 
 int main()
@@ -69,19 +88,8 @@ int main()
     double oscillatingValueDegrees = 0.0; // Initial value
     double lastTime = getTimeInSeconds(); // Initial time
 
-    // Create & generate a vector of cube position
-    std::vector<Vector3> cubePosArray = {};
-
-    for (int i = 0; i < NUM_ROWS; i++)
-    {
-        double xOffset = i * CUBE_POS_OFFSET;
-
-        for (int j = 0; j < NUM_COLS; j++)
-        {
-            double yOffset = j * CUBE_POS_OFFSET;
-            cubePosArray.push_back((Vector3){(float)i + (float)xOffset, 0, (float)j + (float)yOffset});
-        }
-    }
+    // Create a vector of cube posisitons
+    std::vector<Vector3> cubePosArray = genVecOfCubePositions();
 
     // Main game loop
     while (!WindowShouldClose())
@@ -113,7 +121,7 @@ int main()
         {
 
             // Get cube height
-            double cubeHeight = calculateCubeHeight(cubePos.x, oscillatingValueDegrees);
+            double cubeHeight = calculateCubeHeight(-cubePos.x, oscillatingValueDegrees);
 
             DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
             DrawCubeWires(cubePos, 2.0, cubeHeight, 2.0, MAROON);
