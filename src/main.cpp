@@ -43,6 +43,7 @@ double updateValueDegrees(double oscillatingValueDegrees, const double deltaTime
     return oscillatingValueDegrees;
 }
 
+// TODO: Change cube height based off absolute val away from center cube (const MID_OF_NUM_ROWS)
 // Helper that calculates what height a cube should be
 double calculateCubeHeight(const double pos, const double oscillatingValueDegrees)
 {
