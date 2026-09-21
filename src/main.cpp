@@ -25,19 +25,21 @@ double degreesToRadians(double degrees)
 }
 
 // Helper that mutates the given angle based on time elapsed
-void updateValueDegrees(double &oscillatingValueDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
+double updateValueDegrees(double oscillatingValueDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
 {
-    oscillatingValueDegrees += degreesPerSecond * deltaTime; // Mutates given angle
+    oscillatingValueDegrees += degreesPerSecond * deltaTime; // Does NOT mutates given angle
 
     // Wrap around 360 degrees (no precsision loss)
     if (oscillatingValueDegrees >= 360.0)
     {
-        oscillatingValueDegrees = 0.0; // Reset the given angle (mutates)
+        oscillatingValueDegrees = 0.0; // Reset the given angle (no mutating)
     }
+
+    return oscillatingValueDegrees;
 }
 
 // Helper that calculates what height a cube should be
-double calculateCubeHeight(const double oscillatingValueDegrees)
+double calculateCubeHeight(const double pos, const double oscillatingValueDegrees)
 {
     const double SCALAR = 20;
     const double MIN_HEIGHT = 2.0;
@@ -48,7 +50,7 @@ double calculateCubeHeight(const double oscillatingValueDegrees)
         * SCALAR            --> 0.0...SCALAR    --> SCALE
         + MIN        --> MIN...SCALAR + MIN     --> SHIFT BY MIN
     */
-    return (((std::sin(degreesToRadians(oscillatingValueDegrees)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+    return (((std::sin(degreesToRadians(oscillatingValueDegrees + pos)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
 
 int main()
@@ -89,12 +91,6 @@ int main()
         double deltaTime = currentTime - lastTime; // Calculate Delta Time (seconds passed since the previous frame)
         lastTime = currentTime;                    // Update previous time
 
-        // Increase value based on time passed, not frame rate
-        updateValueDegrees(oscillatingValueDegrees, deltaTime);
-
-        // Get cube height
-        double cubeHeight = calculateCubeHeight(oscillatingValueDegrees);
-
         // -------------
         // -- Drawing --
         // -------------
@@ -109,9 +105,16 @@ int main()
         // Draw the cube's wireframe outline on top
         // DrawCubeWires((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, MAROON);
 
+        // Increase value based on time passed, not frame rate
+        oscillatingValueDegrees = updateValueDegrees(oscillatingValueDegrees, deltaTime);
+
         // Draw all the cubes
         for (Vector3 cubePos : cubePosArray)
         {
+
+            // Get cube height
+            double cubeHeight = calculateCubeHeight(cubePos.x, oscillatingValueDegrees);
+
             DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
             DrawCubeWires(cubePos, 2.0, cubeHeight, 2.0, MAROON);
         }
