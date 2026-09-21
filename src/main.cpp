@@ -10,11 +10,11 @@ int main()
 
     // Create a 3D camera
     Camera3D camera = {0};
-    camera.position = (Vector3){0.0f, 10.0f, 10.0f}; // Camera position
-    camera.target = (Vector3){0.0f, 0.0f, 0.0f};     // Camera looking at point
-    camera.up = (Vector3){0.0f, 1.0f, 0.0f};         // Camera up vector
-    camera.fovy = 45.0f;                             // Field of view
-    camera.projection = CAMERA_PERSPECTIVE;          // Projection type
+    camera.position = (Vector3){10.0f, 10.0f, 10.0f}; // Camera position
+    camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
+    camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
+    camera.fovy = 50.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
     // Main game loop
     while (!WindowShouldClose())
@@ -32,7 +32,7 @@ int main()
         DrawCubeWires((Vector3){0.0f, 0.0f, 0.0f}, 2.0f, 2.0f, 2.0f, MAROON);
 
         // Draw a reference grid on the ground
-        DrawGrid(10, 1.0f);
+        //DrawGrid(10, 1.0f);
 
         EndMode3D(); // End 3D mode
 
