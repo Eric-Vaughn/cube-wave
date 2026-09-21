@@ -4,6 +4,7 @@
 #include <raylib.h>
 
 const unsigned int FPS = 60;
+const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
 
 // Helper function to get the current time in seconds
 double getTimeInSeconds()
@@ -47,22 +48,20 @@ int main()
     camera.fovy = 50.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
-    // TEST
-    const double SPEED_MULTIPLIER = 90.0; // Speed in degrees per second (90°/sec = full rotation in 4 seconds)
-
+    // Control
     double angleDegrees = 0.0;
-    double lastTime = getTimeInSeconds();
+    double lastTime = getTimeInSeconds(); // Get initial time
 
     // Main game loop
     while (!WindowShouldClose())
     {
         // Moving the cube up and down
-        double currentTime = getTimeInSeconds();
+        double currentTime = getTimeInSeconds();   // Get current time
         double deltaTime = currentTime - lastTime; // Calculate Delta Time (seconds passed since the last frame)
-        lastTime = currentTime;
+        lastTime = currentTime;                    // Update previous time
 
         // Increase angle based on time passed, not frame rate
-        angleDegrees += SPEED_MULTIPLIER * deltaTime;
+        angleDegrees += ANIMATION_SPEED_MULTIPLIER * deltaTime;
 
         // Wrap around 360 degrees (no precsision loss)
         if (angleDegrees >= 360.0)
