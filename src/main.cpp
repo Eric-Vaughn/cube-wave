@@ -5,8 +5,13 @@
 #include <raylib.h>
 
 const unsigned int FPS = 60;
-const unsigned int NUM_ROWS = 9;                 // Odd for center
-const unsigned int NUM_COLS = NUM_ROWS;          // Cube
+const unsigned int NUM_ROWS = 9;        // Keep value odd for center
+const unsigned int NUM_COLS = NUM_ROWS; // Cube of cubes, so cols = rows
+// Half --> floor --> + 1
+// || 9 / 2 = 4.5 --> floor(4.5) = 4.0 --> 4 + 1 = 5
+// || XXXX(X)XXXX
+const unsigned int MID_OF_NUM_ROWS = (unsigned int)(std::floor((float)(NUM_ROWS) / 2)) + 1;
+const unsigned int MID_OF_NUM_COLS = (unsigned int)(std::floor((float)(NUM_COLS) / 2)) + 1;
 const unsigned int CUBE_POS_OFFSET = 2;          // Testing buffer b/w cubes
 const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
 
