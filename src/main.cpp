@@ -20,6 +20,18 @@ double degreesToRadians(double degrees)
     return degrees * (M_PI / 180.0);
 }
 
+// Helper that mutates the given angle based on time elapsed
+void updateAngleDegrees(double &angleDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
+{
+    angleDegrees += degreesPerSecond * deltaTime; // Mutates given angle
+
+    // Wrap around 360 degrees (no precsision loss)
+    if (angleDegrees >= 360.0)
+    {
+        angleDegrees = 0.0; // Reset the given angle
+    }
+}
+
 // Helper that calculates what height a cube should be
 double calculateCubeHeight(double angleDegrees)
 {
@@ -61,14 +73,9 @@ int main()
         lastTime = currentTime;                    // Update previous time
 
         // Increase angle based on time passed, not frame rate
-        angleDegrees += ANIMATION_SPEED_MULTIPLIER * deltaTime;
+        updateAngleDegrees(angleDegrees, deltaTime);
 
-        // Wrap around 360 degrees (no precsision loss)
-        if (angleDegrees >= 360.0)
-        {
-            angleDegrees = 0.0;
-        }
-
+        // Get cube height
         double cubeHeight = calculateCubeHeight(angleDegrees);
 
         // Drawing
