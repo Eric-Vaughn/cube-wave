@@ -7,6 +7,7 @@ This project is a C++ implementation of [Bees and Bombs](https://bsky.app/profil
 ## Inspiration for this project
 - Bees and Bombs [original Twitter/X post](https://x.com/beesandbombs/status/940639806522085376) (here is their [Bluesky account](https://bsky.app/profile/beesandbombs.bsky.social))
 - [The Coding Train's video](https://www.youtube.com/watch?v=H81Tdrmz2LA)
+- [The Coding Train's website's post](https://thecodingtrain.com/challenges/86-cube-wave-by-bees-and-bombs)
 
 ## Goals of this project
 
