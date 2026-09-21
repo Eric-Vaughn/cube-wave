@@ -67,8 +67,7 @@ int main()
     double oscillatingValueDegrees = 0.0; // Initial value
     double lastTime = getTimeInSeconds(); // Initial time
 
-    // Vector3 testRaylibVec3 = {0.0, 0.0, 0.0};
-
+    // Create & generate a vector of cube position
     std::vector<Vector3> cubePosArray = {};
 
     for (int i = 0; i < NUM_ROWS; i++)
@@ -110,6 +109,7 @@ int main()
         // Draw the cube's wireframe outline on top
         // DrawCubeWires((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, MAROON);
 
+        // Draw all the cubes
         for (Vector3 cubePos : cubePosArray)
         {
             DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
