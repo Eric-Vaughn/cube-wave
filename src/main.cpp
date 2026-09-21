@@ -1,3 +1,7 @@
+/**
+ * Author: Eric Vaughn
+ *
+ */
 #include <string>
 #include <cmath>
 #include <chrono>
