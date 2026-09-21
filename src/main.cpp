@@ -21,19 +21,19 @@ double degreesToRadians(double degrees)
 }
 
 // Helper that mutates the given angle based on time elapsed
-void updateAngleDegrees(double &angleDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
+void updateValueDegrees(double &oscillatingValueDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
 {
-    angleDegrees += degreesPerSecond * deltaTime; // Mutates given angle
+    oscillatingValueDegrees += degreesPerSecond * deltaTime; // Mutates given angle
 
     // Wrap around 360 degrees (no precsision loss)
-    if (angleDegrees >= 360.0)
+    if (oscillatingValueDegrees >= 360.0)
     {
-        angleDegrees = 0.0; // Reset the given angle
+        oscillatingValueDegrees = 0.0; // Reset the given angle
     }
 }
 
 // Helper that calculates what height a cube should be
-double calculateCubeHeight(double angleDegrees)
+double calculateCubeHeight(double oscillatingValueDegrees)
 {
     const double SCALAR = 20;
     const double MIN_HEIGHT = 2.0;
@@ -44,7 +44,7 @@ double calculateCubeHeight(double angleDegrees)
         * SCALAR            --> 0.0...SCALAR
         + MIN_HEIGHT        --> MIN_HEIGHT...SCALAR + MIN_HEIGHT
     */
-    return (((std::sin(degreesToRadians(angleDegrees)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+    return (((std::sin(degreesToRadians(oscillatingValueDegrees)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
 
 int main()
@@ -60,9 +60,8 @@ int main()
     camera.fovy = 50.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
-    // Control
-    double angleDegrees = 0.0;
-    double lastTime = getTimeInSeconds(); // Get initial time
+    double oscillatingValueDegrees = 0.0; // Initial angle
+    double lastTime = getTimeInSeconds(); // Initial time
 
     // Main game loop
     while (!WindowShouldClose())
@@ -73,10 +72,10 @@ int main()
         lastTime = currentTime;                    // Update previous time
 
         // Increase angle based on time passed, not frame rate
-        updateAngleDegrees(angleDegrees, deltaTime);
+        updateValueDegrees(oscillatingValueDegrees, deltaTime);
 
         // Get cube height
-        double cubeHeight = calculateCubeHeight(angleDegrees);
+        double cubeHeight = calculateCubeHeight(oscillatingValueDegrees);
 
         // Drawing
         BeginDrawing();         // Create canvas to draw on
