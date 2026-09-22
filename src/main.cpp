@@ -50,11 +50,11 @@ double calculateCubeHeight(const double pos, const double oscillatingValueDegree
     const double SCALAR = 20;
     const double MIN_HEIGHT = 2.0;
     /*
-        sin(radianAngle)    --> -1.0...1.0      --> SINE'S RANGE
-        + 1                 --> 0.0...2.0       --> ZERO OUT LOWER BOUND
-        / 2                 --> 0.0...1.0       --> NORMALIZE
-        * SCALAR            --> 0.0...SCALAR    --> SCALE
-        + MIN        --> MIN...SCALAR + MIN     --> SHIFT BY MIN
+        sin(radianAngle)    --> -1.0...1.0          --> SINE'S RANGE
+        + 1                 --> 0.0...2.0           --> ZERO OUT LOWER BOUND
+        / 2                 --> 0.0...1.0           --> NORMALIZE
+        * SCALAR            --> 0.0...SCALAR        --> SCALE
+        + MIN               --> MIN...SCALAR + MIN  --> SHIFT BY MIN
 
         sin(radianAngle + position) --> pos offsets result (for wave effect)
     */
@@ -90,7 +90,7 @@ int main()
     camera.position = (Vector3){30.0f, 30.0f, 30.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
-    camera.fovy = 100.0f;                             // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.fovy = 80.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
     double oscillatingValueDegrees = 0.0; // Initial value
@@ -115,11 +115,6 @@ int main()
         ClearBackground(BLACK); // Clear canvas before anything else
 
         BeginMode3D(camera); // Begin 3D mode
-
-        // Draw a solid cube (Position, Width, Height, Length, Color)
-        // DrawCube((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, RED);
-        // Draw the cube's wireframe outline on top
-        // DrawCubeWires((Vector3){0.0, 0.0, 0.0}, 2.0, cubeHeight, 2.0, MAROON);
 
         // Increase value based on time passed, not frame rate
         oscillatingValueDegrees = updateValueDegrees(oscillatingValueDegrees, deltaTime);
