@@ -41,8 +41,8 @@ double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegre
 
     // Map the distance and angle into a sine wave to determine dynamic height
     // The multiplier inside sine adjusts the frequency of the ripple
-    float offset = distance * 0.6;
-    float height = mapDoubleToDouble(sinf(angleRadians - offset), -1.0, 1.0, CUBE_SIZE, NUM_ROWS);
+    float offset = distance * 0.4;
+    float height = mapDoubleToDouble(sinf(angleRadians - offset), -1.0, 1.0, CUBE_SIZE * 3, NUM_ROWS);
 
     return height;
 }
@@ -88,7 +88,7 @@ int main()
     while (!WindowShouldClose())
     {
         // Update angle
-        oscillatingAngleDegrees += 1.5;
+        oscillatingAngleDegrees += 2.0;
 
         if (oscillatingAngleDegrees >= 360.0)
             oscillatingAngleDegrees = 0.0;
@@ -102,6 +102,8 @@ int main()
 
         BeginMode3D(camera); // Begin 3D mode
 
+        std::string testCenter = "";
+
         // Draw all the cubes
         for (Vector3 cubePos : cubePosArray)
         {
@@ -111,11 +113,17 @@ int main()
 
             DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, GREEN);
             DrawCubeWires(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, MAROON);
+
+            if (cubePos.x == (MID_OF_NUM_ROWS - 1 * CUBE_SIZE) - (NUM_ROWS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0) && cubePos.z == (MID_OF_NUM_COLS - 1 * CUBE_SIZE) - (NUM_ROWS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0))
+            {
+                testCenter = testCenter.append("Center cube's height right now: " + std::to_string(cubeHeight));
+            }
         }
 
         EndMode3D(); // End 3D mode
 
         DrawFPS(10, 10); // Put FPS on screen
+        DrawText(testCenter.c_str(), 10, 40, 30, GREEN);
 
         EndDrawing(); // End drawing
     }
