@@ -69,7 +69,7 @@ std::vector<Vector3> genVecOfCubePositions()
 int main()
 {
     InitWindow(800, 800, "Cube Wave"); // Create window
-    //ToggleBorderlessWindowed();        // Make the application borderless fullscreen
+    // ToggleBorderlessWindowed();        // Make the application borderless fullscreen
     SetTargetFPS(FPS);
 
     // Create a 3D camera
