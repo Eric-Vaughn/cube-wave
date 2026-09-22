@@ -35,13 +35,14 @@ double mapDoubleToDouble(
 // Helper that calculates what height a cube should be
 double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegrees)
 {
+    const float angleRadians = degreesToRadians(oscillatingAngleDegrees);
     // Calculate distance from center to create the circular wave pattern
     float distance = sqrtf(pos.x * pos.x + pos.z * pos.z);
 
     // Map the distance and angle into a sine wave to determine dynamic height
     // The multiplier inside sine adjusts the frequency of the ripple
-    float offset = distance * 0.4f;
-    float height = mapDoubleToDouble(sinf(oscillatingAngleDegrees - offset), -1.0, 1.0, 1.0, 6.0);
+    float offset = distance * 0.6;
+    float height = mapDoubleToDouble(sinf(angleRadians - offset), -1.0, 1.0, CUBE_SIZE, NUM_ROWS);
 
     return height;
 }
@@ -75,7 +76,7 @@ int main()
     camera.position = (Vector3){60.0f, 60.0f, 60.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
-    camera.fovy = 80.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.fovy = 40.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
     double oscillatingAngleDegrees = 0.0; // Initial value
@@ -87,7 +88,7 @@ int main()
     while (!WindowShouldClose())
     {
         // Update angle
-        oscillatingAngleDegrees += 0.05;
+        oscillatingAngleDegrees += 1.5;
 
         if (oscillatingAngleDegrees >= 360.0)
             oscillatingAngleDegrees = 0.0;
@@ -108,7 +109,7 @@ int main()
             // Get cube height
             double cubeHeight = calculateCubeHeight(cubePos, oscillatingAngleDegrees);
 
-            DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, RED);
+            DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, GREEN);
             DrawCubeWires(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, MAROON);
         }
 
