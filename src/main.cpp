@@ -55,23 +55,32 @@ double mapDoubleRangeToDoubleRange(
     return new_min + ((val - old_min) * (new_max - new_min)) / (old_max - old_min);
 }
 
+// Helper to find the mag of a vector2d
+double getMagVector2d(const double val1, const double val2)
+{
+    return std::sqrt(std::pow(val1, 2) + std::pow(val2, 2));
+}
+
 // TODO: Change cube height based off absolute val away from center cube (const MID_OF_NUM_ROWS)
 // Helper that calculates what height a cube should be
 double calculateCubeHeight(const Vector3 pos, const double oscillatingValueDegrees)
 {
-    const double SCALAR = 20;
+    const double MAX_HEIGHT = 50.0;
     const double MIN_HEIGHT = 2.0;
     const double centerX = (double)MID_OF_NUM_ROWS - 1;
     const double centerZ = (double)MID_OF_NUM_COLS - 1;
     const double distFromCenterX = std::abs(pos.x - centerX);
     const double distFromCenterZ = std::abs(pos.z - centerZ);
+    const double MAX_MAG = getMagVector2d(NUM_ROWS - 1, NUM_COLS - 1);
+    const double fromCenterMag = getMagVector2d(distFromCenterX, distFromCenterZ);
 
-    const double negAbsDiffFrmCenterZ = -distFromCenterZ;
-    const double posDiagonalWave = (distFromCenterX + distFromCenterZ) * SCALAR / 6;
-    const double negDiagonalWave = (distFromCenterX + negAbsDiffFrmCenterZ) * SCALAR / 6;
+    const double offset = mapDoubleRangeToDoubleRange(fromCenterMag, 0, MAX_MAG, -1, 1);
 
-    const double offset = distFromCenterX;
     const double angle = oscillatingValueDegrees + offset;
+
+    const double height = mapDoubleRangeToDoubleRange(std::sin(angle), -1, 1, MIN_HEIGHT, MAX_HEIGHT);
+
+    return height;
 
     /*
         sin(radianAngle)    --> -1.0...1.0          --> SINE'S RANGE
@@ -82,7 +91,7 @@ double calculateCubeHeight(const Vector3 pos, const double oscillatingValueDegre
 
         sin(radianAngle + position) --> pos offsets result (for wave effect)
     */
-    return (((std::sin(degreesToRadians(angle)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+    // return (((std::sin(degreesToRadians(angle)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
     // return (((std::sin(degreesToRadians(oscillatingValueDegrees + distFromCenterX + distFromCenterZ)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
 
@@ -121,7 +130,7 @@ int main()
     double oscillatingValueDegrees = 0.0; // Initial value
     double lastTime = getTimeInSeconds(); // Initial time
 
-    // Create a vector of cube posisitons
+    // Create a vector for cube posisitons
     std::vector<Vector3> cubePosArray = genVecOfCubePositions();
 
     // Main game loop
