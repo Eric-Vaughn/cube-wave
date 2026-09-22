@@ -13,6 +13,7 @@ const unsigned int NUM_COLS = NUM_ROWS; // Cube of cubes, so cols = rows
 const unsigned int MID_OF_NUM_ROWS = (unsigned int)(std::floor((float)(NUM_ROWS) / 2)) + 1;
 const unsigned int MID_OF_NUM_COLS = (unsigned int)(std::floor((float)(NUM_COLS) / 2)) + 1;
 const unsigned int CUBE_POS_OFFSET = 2;          // Testing buffer b/w cubes
+const double CUBE_SIZE = 2.0;                    // Base length, width, height
 const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
 
 // Helper to get the current time in seconds
@@ -75,22 +76,6 @@ double distVector2d(const Vector2 v1, const Vector2 v2)
 double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegrees)
 {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     // NOTE: The pos.y of the Vector2's is the pos.z value of the Vector3's.
     // This is because we are working with the (x, z) plane.
     // const Vector2 shiftedPos = {pos.x + ((float)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, pos.z + ((float)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
@@ -99,10 +84,10 @@ double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegre
 
     // // const Vector3 testVecShift = {shiftedPos.x, 10.0, shiftedPos.y};
     // // const Vector3 testVecCenter = {centerPos.x, 10.0, centerPos.y};
-    // // DrawCube(testVecCenter, 2.0, 2.0, 2.0, GREEN);
+    // // DrawCube(testVecCenter, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, GREEN);
 
     // const double MAX_HEIGHT = 20.0;
-    // const double MIN_HEIGHT = 2.0;
+    // const double MIN_HEIGHT = CUBE_SIZE;
 
     // const double distFromCenter = distVector2d(shiftedPos, centerPos);
     // const double MAX_DIST = std::hypot(((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET);
@@ -124,11 +109,11 @@ std::vector<Vector3> genVecOfCubePositions()
 
     for (int i = 0; i < NUM_ROWS; i++)
     {
-        double xOffset = i * CUBE_POS_OFFSET;
-
         for (int j = 0; j < NUM_COLS; j++)
         {
-            double yOffset = j * CUBE_POS_OFFSET;
+            // Calculate centered coordinates so the grid centers at (0,0,0)
+            double xOffset = (i * CUBE_SIZE) - (NUM_ROWS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0);
+            double yOffset = (j * CUBE_SIZE) - (NUM_ROWS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0);
             cubePosArray.push_back((Vector3){(float)i + (float)xOffset, 0, (float)j + (float)yOffset});
         }
     }
@@ -187,11 +172,11 @@ int main()
             // Get cube height
             double cubeHeight = calculateCubeHeight(cubePos, oscillatingAngleDegrees);
 
-            DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
-            DrawCubeWires(cubePos, 2.0, cubeHeight, 2.0, MAROON);
+            DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, RED);
+            DrawCubeWires(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, MAROON);
         }
 
-        DrawCube({0.0, 5.0, 0.0}, 2.0, 2.0, 2.0, BLUE);
+        DrawCube({0.0, 5.0, 0.0}, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, BLUE);
 
         // Draw a reference grid on the ground
         // DrawGrid(10, 1.0f);
