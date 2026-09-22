@@ -12,17 +12,7 @@ const unsigned int NUM_COLS = NUM_ROWS; // Cube of cubes, so cols = rows
 // || XXXX(X)XXXX
 const unsigned int MID_OF_NUM_ROWS = (unsigned int)(std::floor((float)(NUM_ROWS) / 2)) + 1;
 const unsigned int MID_OF_NUM_COLS = (unsigned int)(std::floor((float)(NUM_COLS) / 2)) + 1;
-const unsigned int CUBE_POS_OFFSET = 2;          // Testing buffer b/w cubes
-const double CUBE_SIZE = 2.0;                    // Base length, width, height
-const double ANIMATION_SPEED_MULTIPLIER = 180.0; // Speed in degrees per second (180°/sec = full rotation in 2 seconds)
-
-// Helper to get the current time in seconds
-double getTimeInSeconds()
-{
-    auto now = std::chrono::steady_clock::now();
-    auto duration = now.time_since_epoch();
-    return std::chrono::duration<double>(duration).count();
-}
+const double CUBE_SIZE = 1.0; // Base length, width, height
 
 // Helper that converts degrees to radians
 double degreesToRadians(double degrees)
@@ -30,22 +20,8 @@ double degreesToRadians(double degrees)
     return degrees * (M_PI / 180.0);
 }
 
-// Helper that mutates the given angle based on time elapsed
-double updateValueDegrees(double oscillatingAngleDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
-{
-    oscillatingAngleDegrees += degreesPerSecond * deltaTime / FPS; // Does NOT mutates given angle
-
-    // Wrap around 360 degrees (no precsision loss)
-    if (oscillatingAngleDegrees >= 360.0)
-    {
-        oscillatingAngleDegrees = 0.0; // Reset the given angle (no mutating)
-    }
-
-    return oscillatingAngleDegrees;
-}
-
 // Helper to map a double's value's range to a new range
-double mapDoubleRangeToDoubleRange(
+double mapDoubleToDouble(
     const double val,
     const double old_min,
     const double old_max,
@@ -54,21 +30,6 @@ double mapDoubleRangeToDoubleRange(
 {
     // Formula
     return new_min + ((val - old_min) * (new_max - new_min)) / (old_max - old_min);
-}
-
-// Helper to find the mag of a vector2d
-double getMagVector2d(const double val1, const double val2)
-{
-    return std::sqrt(std::pow(val1, 2) + std::pow(val2, 2));
-}
-
-// Helper to get the distance between 2 vector 2Ds
-double distVector2d(const Vector2 v1, const Vector2 v2)
-{
-    const double dx = v2.x - v1.x;
-    const double dy = v2.y - v1.y;
-
-    return std::hypot(dy, dy);
 }
 
 // Helper that calculates what height a cube should be
@@ -80,7 +41,7 @@ double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegre
     // Map the distance and angle into a sine wave to determine dynamic height
     // The multiplier inside sine adjusts the frequency of the ripple
     float offset = distance * 0.4f;
-    float height = mapDoubleRangeToDoubleRange(sinf(oscillatingAngleDegrees - offset), -1.0, 1.0, 1.0, 6.0);
+    float height = mapDoubleToDouble(sinf(oscillatingAngleDegrees - offset), -1.0, 1.0, 1.0, 6.0);
 
     return height;
 }
@@ -114,11 +75,10 @@ int main()
     camera.position = (Vector3){60.0f, 60.0f, 60.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
-    camera.fovy = 120.0f;                             // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.fovy = 80.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
     double oscillatingAngleDegrees = 0.0; // Initial value
-    double lastTime = getTimeInSeconds(); // Initial time
 
     // Create a vector for cube posisitons
     std::vector<Vector3> cubePosArray = genVecOfCubePositions();
@@ -126,11 +86,7 @@ int main()
     // Main game loop
     while (!WindowShouldClose())
     {
-        // Moving the cube up and down
-        double currentTime = getTimeInSeconds();   // Get/Update current time
-        double deltaTime = currentTime - lastTime; // Calculate Delta Time (seconds passed since the previous frame)
-        lastTime = currentTime;                    // Update previous time
-
+        // Update angle
         oscillatingAngleDegrees += 0.05;
 
         if (oscillatingAngleDegrees >= 360.0)
@@ -145,9 +101,6 @@ int main()
 
         BeginMode3D(camera); // Begin 3D mode
 
-        // Increase value based on time passed, not frame rate
-        // oscillatingAngleDegrees = updateValueDegrees(oscillatingAngleDegrees, deltaTime);
-
         // Draw all the cubes
         for (Vector3 cubePos : cubePosArray)
         {
@@ -158,11 +111,6 @@ int main()
             DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, RED);
             DrawCubeWires(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, MAROON);
         }
-
-        DrawCube({0.0, 5.0, 0.0}, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, BLUE);
-
-        // Draw a reference grid on the ground
-        // DrawGrid(10, 1.0f);
 
         EndMode3D(); // End 3D mode
 
