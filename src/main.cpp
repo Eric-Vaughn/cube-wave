@@ -57,8 +57,8 @@ std::vector<Vector3> genVecOfCubePositions()
         {
             // Calculate centered coordinates so the grid centers at (0,0,0)
             double xOffset = (i * CUBE_SIZE) - (NUM_ROWS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0);
-            double yOffset = (j * CUBE_SIZE) - (NUM_ROWS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0);
-            cubePosArray.push_back((Vector3){(float)i + (float)xOffset, 0, (float)j + (float)yOffset});
+            double zOffset = (j * CUBE_SIZE) - (NUM_COLS * CUBE_SIZE / 2.0) + (CUBE_SIZE / 2.0);
+            cubePosArray.push_back((Vector3){(float)xOffset, 0, (float)zOffset});
         }
     }
 
