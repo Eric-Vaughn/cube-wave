@@ -43,12 +43,36 @@ double updateValueDegrees(double oscillatingValueDegrees, const double deltaTime
     return oscillatingValueDegrees;
 }
 
+// Helper to map a double's value's range to a new range
+double mapDoubleRangeToDoubleRange(
+    const double val,
+    const double old_min,
+    const double old_max,
+    const double new_min,
+    const double new_max)
+{
+    // Formula
+    return new_min + ((val - old_min) * (new_max - new_min)) / (old_max - old_min);
+}
+
 // TODO: Change cube height based off absolute val away from center cube (const MID_OF_NUM_ROWS)
 // Helper that calculates what height a cube should be
-double calculateCubeHeight(const double pos, const double oscillatingValueDegrees)
+double calculateCubeHeight(const Vector3 pos, const double oscillatingValueDegrees)
 {
     const double SCALAR = 20;
     const double MIN_HEIGHT = 2.0;
+    const double centerX = (double)MID_OF_NUM_ROWS - 1;
+    const double centerZ = (double)MID_OF_NUM_COLS - 1;
+    const double distFromCenterX = std::abs(pos.x - centerX);
+    const double distFromCenterZ = std::abs(pos.z - centerZ);
+
+    const double negAbsDiffFrmCenterZ = -distFromCenterZ;
+    const double posDiagonalWave = (distFromCenterX + distFromCenterZ) * SCALAR / 6;
+    const double negDiagonalWave = (distFromCenterX + negAbsDiffFrmCenterZ) * SCALAR / 6;
+
+    const double offset = distFromCenterX;
+    const double angle = oscillatingValueDegrees + offset;
+
     /*
         sin(radianAngle)    --> -1.0...1.0          --> SINE'S RANGE
         + 1                 --> 0.0...2.0           --> ZERO OUT LOWER BOUND
@@ -58,7 +82,8 @@ double calculateCubeHeight(const double pos, const double oscillatingValueDegree
 
         sin(radianAngle + position) --> pos offsets result (for wave effect)
     */
-    return (((std::sin(degreesToRadians(oscillatingValueDegrees + pos)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+    return (((std::sin(degreesToRadians(angle)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
+    // return (((std::sin(degreesToRadians(oscillatingValueDegrees + distFromCenterX + distFromCenterZ)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
 
 // Helper to generate a vector of cube position
@@ -124,7 +149,7 @@ int main()
         {
 
             // Get cube height
-            double cubeHeight = calculateCubeHeight(-cubePos.x, oscillatingValueDegrees);
+            double cubeHeight = calculateCubeHeight(cubePos, oscillatingValueDegrees);
 
             DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
             DrawCubeWires(cubePos, 2.0, cubeHeight, 2.0, MAROON);
