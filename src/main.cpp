@@ -71,35 +71,18 @@ double distVector2d(const Vector2 v1, const Vector2 v2)
     return std::hypot(dy, dy);
 }
 
-// TODO: Change cube height based off absolute val away from center cube (const MID_OF_NUM_ROWS)
 // Helper that calculates what height a cube should be
 double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegrees)
 {
+    // Calculate distance from center to create the circular wave pattern
+    float distance = sqrtf(pos.x * pos.x + pos.z * pos.z);
 
-    // NOTE: The pos.y of the Vector2's is the pos.z value of the Vector3's.
-    // This is because we are working with the (x, z) plane.
-    // const Vector2 shiftedPos = {pos.x + ((float)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, pos.z + ((float)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
-    // const Vector2 shiftedPos = {pos.x, pos.z};
-    // const Vector2 centerPos = {((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
+    // Map the distance and angle into a sine wave to determine dynamic height
+    // The multiplier inside sine adjusts the frequency of the ripple
+    float offset = distance * 0.4f;
+    float height = mapDoubleRangeToDoubleRange(sinf(oscillatingAngleDegrees - offset), -1.0, 1.0, 1.0, 6.0);
 
-    // // const Vector3 testVecShift = {shiftedPos.x, 10.0, shiftedPos.y};
-    // // const Vector3 testVecCenter = {centerPos.x, 10.0, centerPos.y};
-    // // DrawCube(testVecCenter, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, GREEN);
-
-    // const double MAX_HEIGHT = 20.0;
-    // const double MIN_HEIGHT = CUBE_SIZE;
-
-    // const double distFromCenter = distVector2d(shiftedPos, centerPos);
-    // const double MAX_DIST = std::hypot(((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET);
-
-    // // const double offset = mapDoubleRangeToDoubleRange(distFromCenter, 0, MAX_DIST, -PI, PI);
-    // const double offset = distFromCenter * 3.0;
-
-    // const double angle = oscillatingAngleDegrees - offset;
-
-    // const double height = mapDoubleRangeToDoubleRange(std::sin(angle), -1, 1, MIN_HEIGHT, MAX_HEIGHT);
-
-    // return height;
+    return height;
 }
 
 // Helper to generate a vector of cube position
