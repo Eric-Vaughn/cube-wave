@@ -5,7 +5,7 @@
 #include <raylib.h>
 
 const unsigned int FPS = 60;
-const unsigned int NUM_ROWS = 9;        // Keep value odd for center
+const unsigned int NUM_ROWS = 21;       // Keep value odd for center
 const unsigned int NUM_COLS = NUM_ROWS; // Cube of cubes, so cols = rows
 // Half --> floor --> + 1
 // || 9 / 2 = 4.5 --> floor(4.5) = 4.0 --> 4 + 1 = 5
@@ -30,17 +30,17 @@ double degreesToRadians(double degrees)
 }
 
 // Helper that mutates the given angle based on time elapsed
-double updateValueDegrees(double oscillatingValueDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
+double updateValueDegrees(double oscillatingAngleDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
 {
-    oscillatingValueDegrees += degreesPerSecond * deltaTime / FPS; // Does NOT mutates given angle
+    oscillatingAngleDegrees += degreesPerSecond * deltaTime / FPS; // Does NOT mutates given angle
 
     // Wrap around 360 degrees (no precsision loss)
-    if (oscillatingValueDegrees >= 360.0)
+    if (oscillatingAngleDegrees >= 360.0)
     {
-        oscillatingValueDegrees = 0.0; // Reset the given angle (no mutating)
+        oscillatingAngleDegrees = 0.0; // Reset the given angle (no mutating)
     }
 
-    return oscillatingValueDegrees;
+    return oscillatingAngleDegrees;
 }
 
 // Helper to map a double's value's range to a new range
@@ -61,38 +61,42 @@ double getMagVector2d(const double val1, const double val2)
     return std::sqrt(std::pow(val1, 2) + std::pow(val2, 2));
 }
 
+// Helper to get the distance between 2 vector 2Ds
+double distVector2d(const Vector2 v1, const Vector2 v2)
+{
+    const double dx = v2.x - v1.x;
+    const double dy = v2.y - v1.y;
+
+    return std::hypot(dy, dy);
+}
+
 // TODO: Change cube height based off absolute val away from center cube (const MID_OF_NUM_ROWS)
 // Helper that calculates what height a cube should be
-double calculateCubeHeight(const Vector3 pos, const double oscillatingValueDegrees)
+double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegrees)
 {
-    const double MAX_HEIGHT = 50.0;
+    // NOTE: The pos.y of the Vector2's is the pos.z value of the Vector3's.
+    // This is because we are working with the (x, z) plane.
+    const Vector2 shiftedPos = {pos.x + ((float)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, pos.z + ((float)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
+    // const Vector2 shiftedPos = {pos.x, pos.z};
+    const Vector2 centerPos = {((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
+
+    // const Vector3 testVecShift = {shiftedPos.x, 10.0, shiftedPos.y};
+    // const Vector3 testVecCenter = {centerPos.x, 10.0, centerPos.y};
+    // DrawCube(testVecShift, 2.0, 2.0, 2.0, GREEN);
+
+    const double MAX_HEIGHT = 20.0;
     const double MIN_HEIGHT = 2.0;
-    const double centerX = (double)MID_OF_NUM_ROWS - 1;
-    const double centerZ = (double)MID_OF_NUM_COLS - 1;
-    const double distFromCenterX = std::abs(pos.x - centerX);
-    const double distFromCenterZ = std::abs(pos.z - centerZ);
-    const double MAX_MAG = getMagVector2d(NUM_ROWS - 1, NUM_COLS - 1);
-    const double fromCenterMag = getMagVector2d(distFromCenterX, distFromCenterZ);
 
-    const double offset = mapDoubleRangeToDoubleRange(fromCenterMag, 0, MAX_MAG, -1, 1);
+    const double distFromCenter = distVector2d(shiftedPos, centerPos);
+    const double MAX_DIST = std::hypot(((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET);
 
-    const double angle = oscillatingValueDegrees + offset;
+    double offset = mapDoubleRangeToDoubleRange(distFromCenter, 0, MAX_DIST, -PI, PI);
+
+    const double angle = oscillatingAngleDegrees - offset;
 
     const double height = mapDoubleRangeToDoubleRange(std::sin(angle), -1, 1, MIN_HEIGHT, MAX_HEIGHT);
 
     return height;
-
-    /*
-        sin(radianAngle)    --> -1.0...1.0          --> SINE'S RANGE
-        + 1                 --> 0.0...2.0           --> ZERO OUT LOWER BOUND
-        / 2                 --> 0.0...1.0           --> NORMALIZE
-        * SCALAR            --> 0.0...SCALAR        --> SCALE
-        + MIN               --> MIN...SCALAR + MIN  --> SHIFT BY MIN
-
-        sin(radianAngle + position) --> pos offsets result (for wave effect)
-    */
-    // return (((std::sin(degreesToRadians(angle)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
-    // return (((std::sin(degreesToRadians(oscillatingValueDegrees + distFromCenterX + distFromCenterZ)) + 1) / 2) * SCALAR) + MIN_HEIGHT;
 }
 
 // Helper to generate a vector of cube position
@@ -121,13 +125,13 @@ int main()
 
     // Create a 3D camera
     Camera3D camera = {0};
-    camera.position = (Vector3){30.0f, 30.0f, 30.0f}; // Camera position
+    camera.position = (Vector3){60.0f, 60.0f, 60.0f}; // Camera position
     camera.target = (Vector3){0.0f, 0.0f, 0.0f};      // Camera looking at point
     camera.up = (Vector3){0.0f, 1.0f, 0.0f};          // Camera up vector
-    camera.fovy = 80.0f;                              // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
+    camera.fovy = 120.0f;                             // Field of view (in orthographic mode, fovy acts as the view size/zoom width)
     camera.projection = CAMERA_ORTHOGRAPHIC;          // Projection type
 
-    double oscillatingValueDegrees = 0.0; // Initial value
+    double oscillatingAngleDegrees = 0.0; // Initial value
     double lastTime = getTimeInSeconds(); // Initial time
 
     // Create a vector for cube posisitons
@@ -141,6 +145,11 @@ int main()
         double deltaTime = currentTime - lastTime; // Calculate Delta Time (seconds passed since the previous frame)
         lastTime = currentTime;                    // Update previous time
 
+        oscillatingAngleDegrees += 0.05;
+
+        if (oscillatingAngleDegrees >= 360.0)
+            oscillatingAngleDegrees = 0.0;
+
         // -------------
         // -- Drawing --
         // -------------
@@ -151,18 +160,20 @@ int main()
         BeginMode3D(camera); // Begin 3D mode
 
         // Increase value based on time passed, not frame rate
-        oscillatingValueDegrees = updateValueDegrees(oscillatingValueDegrees, deltaTime);
+        // oscillatingAngleDegrees = updateValueDegrees(oscillatingAngleDegrees, deltaTime);
 
         // Draw all the cubes
         for (Vector3 cubePos : cubePosArray)
         {
 
             // Get cube height
-            double cubeHeight = calculateCubeHeight(cubePos, oscillatingValueDegrees);
+            double cubeHeight = calculateCubeHeight(cubePos, oscillatingAngleDegrees);
 
             DrawCube(cubePos, 2.0, cubeHeight, 2.0, RED);
             DrawCubeWires(cubePos, 2.0, cubeHeight, 2.0, MAROON);
         }
+
+        DrawCube({0.0, 5.0, 0.0}, 2.0, 2.0, 2.0, BLUE);
 
         // Draw a reference grid on the ground
         // DrawGrid(10, 1.0f);
