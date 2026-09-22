@@ -76,13 +76,13 @@ double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegre
 {
     // NOTE: The pos.y of the Vector2's is the pos.z value of the Vector3's.
     // This is because we are working with the (x, z) plane.
-    const Vector2 shiftedPos = {pos.x + ((float)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, pos.z + ((float)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
-    // const Vector2 shiftedPos = {pos.x, pos.z};
+    // const Vector2 shiftedPos = {pos.x + ((float)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, pos.z + ((float)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
+    const Vector2 shiftedPos = {pos.x, pos.z};
     const Vector2 centerPos = {((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET};
 
-    // const Vector3 testVecShift = {shiftedPos.x, 10.0, shiftedPos.y};
-    // const Vector3 testVecCenter = {centerPos.x, 10.0, centerPos.y};
-    // DrawCube(testVecShift, 2.0, 2.0, 2.0, GREEN);
+    const Vector3 testVecShift = {shiftedPos.x, 10.0, shiftedPos.y};
+    const Vector3 testVecCenter = {centerPos.x, 10.0, centerPos.y};
+    DrawCube(testVecCenter, 2.0, 2.0, 2.0, GREEN);
 
     const double MAX_HEIGHT = 20.0;
     const double MIN_HEIGHT = 2.0;
@@ -90,7 +90,8 @@ double calculateCubeHeight(const Vector3 pos, const double oscillatingAngleDegre
     const double distFromCenter = distVector2d(shiftedPos, centerPos);
     const double MAX_DIST = std::hypot(((double)MID_OF_NUM_ROWS - 1) * CUBE_POS_OFFSET, ((double)MID_OF_NUM_COLS - 1) * CUBE_POS_OFFSET);
 
-    double offset = mapDoubleRangeToDoubleRange(distFromCenter, 0, MAX_DIST, -PI, PI);
+    // const double offset = mapDoubleRangeToDoubleRange(distFromCenter, 0, MAX_DIST, -PI, PI);
+    const double offset = distFromCenter * 3.0;
 
     const double angle = oscillatingAngleDegrees - offset;
 
