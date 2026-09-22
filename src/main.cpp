@@ -69,6 +69,7 @@ std::vector<Vector3> genVecOfCubePositions()
 int main()
 {
     InitWindow(800, 800, "Cube Wave"); // Create window
+    //ToggleBorderlessWindowed();        // Make the application borderless fullscreen
     SetTargetFPS(FPS);
 
     // Create a 3D camera
@@ -109,9 +110,8 @@ int main()
             // Get cube height
             double cubeHeight = calculateCubeHeight(cubePos, oscillatingAngleDegrees);
 
-            DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, GREEN);
-            DrawCubeWires(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, MAROON);
-
+            DrawCube(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, PURPLE);
+            DrawCubeWires(cubePos, CUBE_SIZE, cubeHeight, CUBE_SIZE, DARKBLUE);
         }
 
         EndMode3D(); // End 3D mode
