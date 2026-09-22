@@ -32,7 +32,7 @@ double degreesToRadians(double degrees)
 // Helper that mutates the given angle based on time elapsed
 double updateValueDegrees(double oscillatingValueDegrees, const double deltaTime, double degreesPerSecond = ANIMATION_SPEED_MULTIPLIER)
 {
-    oscillatingValueDegrees += degreesPerSecond * deltaTime; // Does NOT mutates given angle
+    oscillatingValueDegrees += degreesPerSecond * deltaTime / FPS; // Does NOT mutates given angle
 
     // Wrap around 360 degrees (no precsision loss)
     if (oscillatingValueDegrees >= 360.0)
