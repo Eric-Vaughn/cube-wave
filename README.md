@@ -1,5 +1,9 @@
 # Cube Wave
 
+## Project image
+
+<img width="1914" height="1080" alt="Screenshot (265)" src="https://github.com/user-attachments/assets/ac6dc5ff-185b-426a-835a-bfe0a52e6486" />
+
 ## Project description
 
 This project is a C++ implementation of [Bees and Bombs](https://bsky.app/profile/beesandbombs.bsky.social)'s Cube Wave using raylib! Inspired by The Coding Train's video: [Coding Challenge 86: Cube Wave by Bees and Bombs](https://www.youtube.com/watch?v=H81Tdrmz2LA).
