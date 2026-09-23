@@ -2,7 +2,7 @@
 
 ## Project image
 
-<img width="1914" height="1080" alt="Screenshot (265)" src="https://github.com/user-attachments/assets/ac6dc5ff-185b-426a-835a-bfe0a52e6486" />
+<img width="1920" height="1080" alt="2026-09-22 16-43-51 GIF (1)" src="https://github.com/user-attachments/assets/94d26af7-481a-4183-8b32-5484105fb517" />
 
 ## Project description
 
