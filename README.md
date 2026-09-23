@@ -77,3 +77,4 @@ This project, as a whole, was fun. It was a good introduction to raylib's 3D fun
 - Add controls to increase/decrease the speed at which the wave oscillates
 - Add controls to increase/decrease the frequence of the wave
 - Add controls to zoom the camera in/out
+- Change colors, user set & color based on cube height
